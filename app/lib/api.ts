@@ -1,7 +1,6 @@
 import { fetchAPI } from './hygraph'
 import { fetchBackendAPI } from './backend'
 import Contact from '../interfaces/contact'
-import CalcRequest from '../interfaces/calc-request'
 
 
 type Items = {
@@ -22,16 +21,13 @@ async function createAccount(name: string, email: string) {
   const res2 = await fetchAPI(`
   mutation {
     publishAccount(where: {
-      id: "${res.data.createAccount.id}"
+      id: "${res.createAccount.id}"
     }) {
       id
-      name
-      email
     }
   }`)
 
-  console.log(res2.json())
-  return res.data.createAccount.id
+  return res2.publishAccount.id
 }
 
 export async function getAccountIdByEmail(name: string, email: string) {
