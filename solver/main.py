@@ -25,13 +25,10 @@ async def solve(request: RequestBody):
         solver = Solver()
         solver.solve_vrp(
             request.start_time,
-            [request.start]+request.waypoints,
-            # [request.start]+request.waypoints+[request.end],
+            [request.start] + request.waypoints,
+            # [request.start] + request.waypoints + [request.goal],
         )
         return solver.asdict()
     except Exception:
         t, v, tb = sys.exc_info()
-        return {
-            "status": "error",
-            "error": traceback.format_exception(t, v, tb)
-        }
+        return {"status": "error", "error": traceback.format_exception(t, v, tb)}

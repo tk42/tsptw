@@ -10,14 +10,12 @@ from consts import WayPoint, gmaps, create_datetime, logger
 class Solver:
     def __init__(self) -> None:
         self.routes = []
-        # self.goal = None
         self.total_time = None
 
     def asdict(self) -> dict:
         return {
             "status": "success",
             "total_time": self.total_time,
-            # "goal": self.goal,
             "routes": self.routes,
         }
 
@@ -79,19 +77,28 @@ class Solver:
             while not routing.IsEnd(index):
                 sp = data["sp"][manager.IndexToNode(index)]
                 time_var = time_dimension.CumulVar(index)
-                self.routes += [{
-                    "id": sp.id,
-                    "name": sp.name,
-                    "predict_min_time": data["start_time"] + timedelta(minutes=solution.Min(time_var)),
-                    "predict_max_time": None if solution.Min(time_var) == solution.Max(time_var) else data["start_time"] + timedelta(minutes=solution.Max(time_var)),
-                }]
+                self.routes += [
+                    {
+                        "id": sp.id,
+                        "name": sp.name,
+                        "predict_min_time": data["start_time"] + timedelta(minutes=solution.Min(time_var)),
+                        "predict_max_time": None
+                        if solution.Min(time_var) == solution.Max(time_var)
+                        else data["start_time"] + timedelta(minutes=solution.Max(time_var)),
+                    }
+                ]
                 index = solution.Value(routing.NextVar(index))
             time_var = time_dimension.CumulVar(index)
-            self.goal = {
-                "id": data["sp"][0].id,
-                "name": data["sp"][0].name,
-                "predict_min_time": data["start_time"] + timedelta(minutes=solution.Min(time_var)),
-            }
+            self.routes += [
+                {
+                    "id": data["sp"][0].id,
+                    "name": data["sp"][0].name,
+                    "predict_min_time": data["start_time"] + timedelta(minutes=solution.Min(time_var)),
+                    "predict_max_time": None
+                    if solution.Min(time_var) == solution.Max(time_var)
+                    else data["start_time"] + timedelta(minutes=solution.Max(time_var)),
+                }
+            ]
             self.total_time += solution.Min(time_var)
 
     # Solve the VRP with time windows.
