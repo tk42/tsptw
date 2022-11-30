@@ -1,1 +1,7 @@
 .DS_Store
+
+serviceAccount.json
+
+.env.local
+
+__pycache__

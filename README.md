@@ -1,5 +1,11 @@
-# nextjs-starter-ts-hygraph
+# tsptw
 
-NextJS starter with Typescript connected to hygraph.
+ - Frontend
+   - NextJS
+   - Typescript
+
+ - Backend
+   - hygraph (GraphQL)
+   - FastAPI (python)
 
 ![image](./image.png)

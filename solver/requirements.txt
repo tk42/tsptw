@@ -1,0 +1,9 @@
+googlemaps
+google
+
+fastapi
+pydantic
+uvicorn
+
+numpy
+ortools

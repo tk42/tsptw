@@ -1,6 +1,4 @@
-import Container from './container'
 import cn from 'classnames'
-import { GITHUB_URL } from '../lib/constants'
 
 type Props = {
   preview?: boolean
@@ -14,7 +12,7 @@ const Alert = ({ preview }: Props) => {
         'bg-neutral-50 border-neutral-200': !preview,
       })}
     >
-      <Container>
+      <div className="mx-auto">
         <div className="py-2 text-center text-sm">
           {preview ? (
             <>
@@ -29,18 +27,11 @@ const Alert = ({ preview }: Props) => {
             </>
           ) : (
             <>
-              The source code for this blog is{' '}
-              <a
-                href={`${GITHUB_URL}`}
-                className="underline hover:text-blue-600 duration-200 transition-colors"
-              >
-                available on GitHub
-              </a>
-              .
+              We are seeking clinics for this beta release!
             </>
           )}
         </div>
-      </Container>
+      </div>
     </div>
   )
 }
