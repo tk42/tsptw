@@ -202,12 +202,10 @@ export async function deleteContact(accountId: string, contactId: string) {
 }
 
 export async function findRoute(start_time: string, start: Contact, goal: Contact, waypoints: Contact[]) {
-  const res = await fetchBackendAPI({
+  return await fetchBackendAPI({
     start_time: start_time,
     start: start,
     goal: goal,
     waypoints: waypoints
   })
-
-  return res.json()
 }

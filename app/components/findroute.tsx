@@ -1,5 +1,5 @@
 // (1) import Layer
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import Contact from '../interfaces/contact'
 import Route from '../interfaces/route'
 import DatetimeForm from './datetime-form'
@@ -78,10 +78,14 @@ const Component: React.FC<Props> = props => (
                         "waypoints": props.contacts.filter((contact, idx) => (idx !== props.startPointIdx && props.wayPointIdxs.includes(idx))).map((contact) => contact2waypoint(contact))
                     }),
                 }).then(async (res) => {
-                    const routes: Route[] = await res.json()
-                    console.log(routes)
-                    alert(`計算が終了しました`)
-                    props.setRoute(routes)
+                    const json = await res.json()
+                    // console.log("result.json:", json)
+                    const result = {
+                        "status": json.status,
+                        "total_time": json.total_time,
+                        "routes": json.routes,
+                    }
+                    props.setRoute(result.routes)
                 })}
             >
                 探索！

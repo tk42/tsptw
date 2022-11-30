@@ -1,7 +1,6 @@
 import CalcRequest from "../interfaces/calc-request"
 
 export async function fetchBackendAPI(req: CalcRequest) {
-    console.log("fetchBackendAPI: ", process.env.BACKEND_API, JSON.stringify(req))
     const res = await fetch(process.env.BACKEND_API, {
         method: 'POST',
         headers: {
@@ -10,13 +9,11 @@ export async function fetchBackendAPI(req: CalcRequest) {
         },
         body: JSON.stringify(req)
     })
-    console.log(res)
-    const json = await res.json()
 
-    if (json.errors) {
-        console.error(json.errors)
+    if (!res.ok) {
+        console.error(res.status)
         throw new Error('Failed to fetch API')
     }
 
-    return json.data
+    return await res.json()
 }

@@ -8,7 +8,7 @@ type Props = {
 
 export default function Timeline(props: Props) {
     return (
-        <div className="flow-root">
+        <div className="flow-root mt-6">
             <ul role="list" className="-mb-8">
                 {props.timeline.map((event, eventIdx) => (
                     <li key={event.id}>
