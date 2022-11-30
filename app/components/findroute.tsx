@@ -1,5 +1,5 @@
 // (1) import Layer
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Contact from '../interfaces/contact'
 import Route from '../interfaces/route'
 import DatetimeForm from './datetime-form'
@@ -100,6 +100,10 @@ export const Container: React.FC<ContainerProps> = props => {
     const [startTime, setStartTime] = useState<string>("09:00")
     const [route, setRoute] = useState<Route[]>([])
 
+    useEffect(() => {
+        console.log("findroute", props.startPointIdx, props.wayPointIdxs, props.contacts)
+    }, [props.startPointIdx, props.wayPointIdxs, props.contacts])
+    
     return <Component {...{
         startTime,
         setStartTime,

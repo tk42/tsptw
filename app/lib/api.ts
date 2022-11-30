@@ -125,6 +125,11 @@ export async function addContact(accountId: string, name: string, address: strin
       id: "${contactId}"
     }) {
       id
+    },
+    publishAccount(where: {
+      id: "${accountId}"
+    }) {
+      id
     }
   } `)
 
