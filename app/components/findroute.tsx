@@ -79,6 +79,11 @@ const Component: React.FC<Props> = props => (
                     }),
                 }).then(async (res) => {
                     const json = await res.json()
+                    if (json.status === "error") {
+                        alert("解が見つかりませんでした")
+                        console.warn("error", json.error)
+                        return
+                    }
                     // console.log("result.json:", json)
                     const result = {
                         "status": json.status,
@@ -103,7 +108,7 @@ export const Container: React.FC<ContainerProps> = props => {
     useEffect(() => {
         console.log("findroute", props.startPointIdx, props.wayPointIdxs, props.contacts)
     }, [props.startPointIdx, props.wayPointIdxs, props.contacts])
-    
+
     return <Component {...{
         startTime,
         setStartTime,
