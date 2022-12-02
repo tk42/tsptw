@@ -1,7 +1,6 @@
 import { Fragment, useState } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import DatetimeForm from './datetime-form'
-import { addContact } from '../lib/api'
 import Contact from '../interfaces/contact'
 
 type Props = {
@@ -143,6 +142,6 @@ export default function AddContact(props: Props) {
                     </div>
                 </div>
             </Dialog>
-        </Transition.Root>
+        </Transition.Root >
     )
 }

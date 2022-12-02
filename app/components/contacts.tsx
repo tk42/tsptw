@@ -4,6 +4,7 @@ import AddContact from './add-contact'
 import { Container as ContactRow } from './contact-row'
 import SearchBox from './search-box'
 import { Action, State } from '../lib/select-contact-context';
+import { MAX_CONTACTS_ON_FREE } from '../lib/api'
 
 
 type Props = {
@@ -61,7 +62,13 @@ export default function Contacts(props: Props) {
             <button
               type="button"
               className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
-              onClick={() => addStateOpen[1](true)}
+              onClick={() => {
+                if (props.contacts.length >= MAX_CONTACTS_ON_FREE) {
+                  alert(`無料版の経由地点の追加は${MAX_CONTACTS_ON_FREE}件までです`)
+                  return
+                }
+                addStateOpen[1](true)
+              }}
             >
               新規登録
             </button>

@@ -3,6 +3,8 @@ import { fetchBackendAPI } from './backend'
 import Contact from '../interfaces/contact'
 
 
+export const MAX_CONTACTS_ON_FREE = 50
+
 type Items = {
   [key: string]: string
 }
@@ -57,7 +59,7 @@ export async function getContactByAccountEmail(accountId: string) {
       }
     ) {
       contacts(
-        first: 1000
+        first: ${MAX_CONTACTS_ON_FREE}
       ) {
         id
         name
