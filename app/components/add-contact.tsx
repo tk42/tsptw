@@ -16,8 +16,8 @@ export default function AddContact(props: Props) {
     const [name, setName] = useState('')
     const [address, setAddress] = useState('')
     const [stayingMin, setStayingMin] = useState(15)
-    const [startTime, setStartTime] = useState('')
-    const [endTime, setEndTime] = useState('')
+    const [startTime, setStartTime] = useState('09:00')
+    const [endTime, setEndTime] = useState('19:00')
 
     return (
         <Transition.Root show={props.open} as={Fragment}>

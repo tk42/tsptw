@@ -2,20 +2,22 @@ import { useEffect, useState } from 'react'
 import Contact from '../interfaces/contact'
 import AddContact from './add-contact'
 import { Container as ContactRow } from './contact-row'
+import SearchBox from './search-box'
+import { Action, State } from '../lib/select-contact-context';
 
 
 type Props = {
   accountId: string
   email: string
   contacts: Contact[]
-  startPointIdx: number
-  setStartPointIdx: React.Dispatch<React.SetStateAction<number>>
-  wayPointIdxs: number[]
-  setWayPointIdxs: React.Dispatch<React.SetStateAction<number[]>>
+  state: State
+  dispatch: React.Dispatch<Action>
 }
 
 export default function Contacts(props: Props) {
   const [contacts, setContacts] = useState<Contact[]>(props.contacts)
+
+  const [searchText, setSearchText] = useState<string>('')
 
   const addStateOpen = useState(false)
 
@@ -43,7 +45,7 @@ export default function Contacts(props: Props) {
               「住所」：経由地点の住所．都道府県から番地まで入力してください．郵便番号は不要です．挙動不審の場合はGoogleMapで住所検索をおこない，想定の場所にドロップピンが指されることを確認してください．
             </p>
             <p className="mt-2 text-sm text-gray-700">
-              「見積診察時間」：車を停車してから発車するまでのおおよその時間を5分刻みで入力してください
+              「見積診察時間」：車を停車してから発車するまでのおおよその時間を分刻みで入力してください
             </p>
             <p className="mt-2 text-sm text-gray-700">
               「訪問可能時間帯(始)」：経由地点に到着してもよい最も早い時刻を入力してください
@@ -65,8 +67,14 @@ export default function Contacts(props: Props) {
         <div className="mt-8 flex flex-col">
           <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
             <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
+              <div className="relative mt-1 rounded-md shadow-sm">
+                <SearchBox {...{
+                  searchText: searchText,
+                  setSearchText: setSearchText,
+                }} />
+              </div>
               <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
-                <fieldset className="mt-4">
+                <fieldset>
                   <table className="min-w-full divide-y divide-gray-300">
                     <thead className="bg-gray-50">
                       <tr>
@@ -96,7 +104,9 @@ export default function Contacts(props: Props) {
                       </tr>
                     </thead>
                     <tbody className="bg-white">
-                      {contacts.map((person, personIdx) => (
+                      {contacts.filter(
+                        (person) => (person.name.includes(searchText))
+                      ).map((person, personIdx) => (
                         <ContactRow
                           accountId={props.accountId}
                           contacts={contacts}
@@ -104,10 +114,8 @@ export default function Contacts(props: Props) {
                           key={personIdx}
                           person={person}
                           personIdx={personIdx}
-                          startPointIdx={props.startPointIdx}
-                          setStartPointIdx={props.setStartPointIdx}
-                          wayPointIdxs={props.wayPointIdxs}
-                          setWayPointIdxs={props.setWayPointIdxs}
+                          state={props.state}
+                          dispatch={props.dispatch}
                         />
                       ))}
                     </tbody>

@@ -33,17 +33,19 @@ async function createAccount(name: string, email: string) {
 export async function getAccountIdByEmail(name: string, email: string) {
   const res = await fetchAPI(`
   query {
-    accounts {
+    accounts(
+      where: {
+        email: "${email}"
+      }
+    ) {
       id
-      email
     }
   }`)
 
-  const account = res.accounts.find((account: Items) => account.email === email)
-  if (account) {
-    return account.id
+  if (res.accounts.length === 0) {
+    return createAccount(name, email)
   }
-  return createAccount(name, email)
+  return res.accounts[0].id
 }
 
 export async function getContactByAccountEmail(accountId: string) {
@@ -54,7 +56,9 @@ export async function getContactByAccountEmail(accountId: string) {
         id: "${accountId}"
       }
     ) {
-      contacts {
+      contacts(
+        first: 1000
+      ) {
         id
         name
         address

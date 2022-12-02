@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import Contact from '../interfaces/contact'
 import EditContact from './edit-contact'
 import { PencilSquareIcon, TrashIcon } from '@heroicons/react/24/outline'
+import { Action, State } from '../lib/select-contact-context';
 
 
 // (2) Types Layer
@@ -12,10 +13,8 @@ export type ContainerProps = {
     setContacts: React.Dispatch<React.SetStateAction<Contact[]>>
     person: Contact
     personIdx: number
-    startPointIdx: number
-    setStartPointIdx: React.Dispatch<React.SetStateAction<number>>
-    wayPointIdxs: number[]
-    setWayPointIdxs: React.Dispatch<React.SetStateAction<number[]>>
+    state: State
+    dispatch: React.Dispatch<Action>
 }
 type Props = {
     open: boolean
@@ -39,10 +38,10 @@ const Component: React.FC<Props> = props => (
                     type={"radio"}
                     id={`s-${props.person.id}`}
                     name={"startPoint"}
-                    defaultChecked={props.personIdx === props.startPointIdx}
+                    defaultChecked={props.state.startId === `${props.person.id}`}
                     className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500"
                     onChange={() => {
-                        props.setStartPointIdx(props.personIdx)
+                        props.dispatch({ type: 'SET_START', startId: `${props.person.id}` })
                         // NOTE: Not support because the appearance is not matched to the internal state.
                         // if (props.wayPointIdxs.includes(props.startPointIdx)) {
                         //     props.setWayPointIdxs(props.wayPointIdxs.filter((idx) => idx !== props.startPointIdx))
@@ -56,9 +55,11 @@ const Component: React.FC<Props> = props => (
                     id={`w-${props.person.id}`}
                     name={"wayPoint"}
                     className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                    disabled={props.personIdx === props.startPointIdx}
+                    disabled={props.state.startId === `${props.person.id}`}
+                    checked={props.state.wayPointIds.has(`${props.person.id}`)}
                     onChange={() => {
-                        props.setWayPointIdxs(props.wayPointIdxs.includes(props.personIdx) ? props.wayPointIdxs.filter((idx) => idx !== props.personIdx) : [...props.wayPointIdxs, props.personIdx])
+                        props.dispatch({ type: 'SET_WAYPOINT', wayPointId: `${props.person.id}` })
+
                         // NOTE: Not support because the appearance is not matched to the internal state.
                         // if (props.wayPointIdxs.includes(props.startPointIdx)) {
                         //     props.setWayPointIdxs(props.wayPointIdxs.filter((idx) => idx !== props.startPointIdx))
