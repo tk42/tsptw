@@ -53,6 +53,9 @@ export default function Contacts(props: Props) {
             <p className="mt-2 text-sm text-gray-700">
               「訪問可能時間帯(終)」：経由地点に滞在してもよい最も遅い時刻を入力してください
             </p>
+            <p className="mt-2 text-sm text-gray-700">
+              検索窓で名称のフィルタリングができます
+            </p>
           </div>
           <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
             <button
@@ -99,8 +102,8 @@ export default function Contacts(props: Props) {
                         <th scope="col" className="px-1 py-3.5 text-left text-sm font-semibold text-gray-900">
                           訪問可能時間帯(終)
                         </th>
-                        <th scope="col" className="relative py-3.5 sm:pr-5" />
-                        <th scope="col" className="relative py-3.5 sm:pr-5" />
+                        <th scope="col" className="py-3.5 pr-5" />
+                        <th scope="col" className="py-3.5 pr-5" />
                       </tr>
                     </thead>
                     <tbody className="bg-white">

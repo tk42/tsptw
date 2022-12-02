@@ -9,11 +9,11 @@ type Props = {
 
 export default function DatetimeForm(props: Props) {
     return (
-        <div className="flex justify-between">
+        <div className="flex justify-between items-center">
             <label className="block text-sm font-medium text-gray-700">
                 {props.caption}
             </label>
-            <div className="mt-1">
+            <div className="flex items-center">
                 <input
                     type={props.type}
                     name={props.name}

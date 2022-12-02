@@ -35,7 +35,7 @@ export default function EditContact(props: Props) {
                 </Transition.Child>
 
                 <div className="fixed inset-0 z-10 overflow-y-auto">
-                    <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+                    <div className="flex min-h-full items-center justify-center p-4 text-center sm:items-center sm:p-0">
                         <Transition.Child
                             as={Fragment}
                             enter="ease-out duration-300"
@@ -51,7 +51,7 @@ export default function EditContact(props: Props) {
                                         {name} を編集
                                     </Dialog.Title>
 
-                                    <div className="flex justify-between sm:col-span-4">
+                                    <div className="flex justify-between items-center sm:col-span-6">
                                         <label className="block text-sm font-medium text-gray-700">
                                             名称
                                         </label>
@@ -67,7 +67,7 @@ export default function EditContact(props: Props) {
                                         </div>
                                     </div>
 
-                                    <div className="flex justify-between sm:col-span-4">
+                                    <div className="flex justify-between items-center sm:col-span-6">
                                         <label className="block text-sm font-medium text-gray-700">
                                             住所
                                         </label>
@@ -83,7 +83,7 @@ export default function EditContact(props: Props) {
                                         </div>
                                     </div>
 
-                                    <div className="flex justify-between sm:col-span-4">
+                                    <div className="flex justify-between items-center sm:col-span-6">
                                         <label className="block text-sm font-medium text-gray-700">
                                             見積診察時間
                                         </label>
@@ -131,7 +131,7 @@ export default function EditContact(props: Props) {
                                             props.setOpen(false)
                                         })}
                                     >
-                                        Confirm
+                                        登録
                                     </button>
                                 </div>
                             </Dialog.Panel>
