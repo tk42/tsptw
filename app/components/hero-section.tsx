@@ -2,10 +2,9 @@ import Image from 'next/image'
 
 type Props = {
     children?: React.ReactNode
-    logged_in: boolean
 }
 
-const HeroSection = ({ children, logged_in }: Props) => {
+const HeroSection = ({ children }: Props) => {
     return (
         <>
             <div className="relative z-10 bg-white pb-8 sm:pb-16 md:pb-20 lg:w-full lg:max-w-2xl lg:pb-28 xl:pb-32">
@@ -31,7 +30,7 @@ const HeroSection = ({ children, logged_in }: Props) => {
                         <div className="mt-5 sm:mt-8 sm:flex sm:justify-center lg:justify-start">
                             <div className="rounded-md shadow">
                                 <a
-                                    href={logged_in ? "/top" : "/api/auth/login"}
+                                    href="/top"
                                     className="flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 md:py-4 md:px-10 md:text-lg"
                                 >
                                     Get started

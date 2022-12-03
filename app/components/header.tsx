@@ -1,17 +1,18 @@
 // (1) import Layer
 import React from 'react'
+import { Container as LoginButton } from './login-button'
+import { Navigation } from '../interfaces/navigation'
 
 // (2) Types Layer
 export type ContainerProps = {
-    logged_in: boolean
 }
 type Props = {
 } & ContainerProps
 
 // (3) Consts
-const navigation = [
+const navigation: Navigation[] = [
     { name: 'Docs', href: '#' },
-    { name: 'Privacy Policy', href: '#' },
+    { name: 'Privacy Policy', href: '/policy' },
 ]
 
 
@@ -47,9 +48,7 @@ const Component: React.FC<Props> = props => (
                             {item.name}
                         </a>
                     ))}
-                    <a href={props.logged_in ? "/api/auth/logout" : "/api/auth/login"} className="font-medium text-indigo-600 hover:text-indigo-500">
-                        Log {props.logged_in ? "out" : "in"}
-                    </a>
+                    <LoginButton />
                 </div>
             </nav>
         </div>
