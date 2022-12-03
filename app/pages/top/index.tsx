@@ -27,7 +27,7 @@ function Index(props: Props) {
                     <title>往診巡回経路最適化さん</title>
                 </Head>
                 <Container>
-                    <Header logged_in={props.user !== undefined} />
+                    <Header />
                     <ctx.Provider value={{
                         startId: state.startId,
                         wayPointIds: state.wayPointIds,
