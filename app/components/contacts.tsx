@@ -1,5 +1,4 @@
-import { useEffect, useState } from 'react'
-import Contact from '../interfaces/contact'
+import { useState } from 'react'
 import AddContact from './add-contact'
 import { Container as ContactRow } from './contact-row'
 import SearchBox from './search-box'
@@ -10,30 +9,21 @@ import { MAX_CONTACTS_ON_FREE } from '../lib/api'
 type Props = {
   accountId: string
   email: string
-  contacts: Contact[]
   state: State
   dispatch: React.Dispatch<Action>
 }
 
 export default function Contacts(props: Props) {
-  const [contacts, setContacts] = useState<Contact[]>(props.contacts)
-
   const [searchText, setSearchText] = useState<string>('')
-
   const addStateOpen = useState(false)
-
-  useEffect(() => {
-    setContacts(props.contacts)
-  }, [props.contacts])
 
   return (
     <>
       <AddContact {...{
         accountId: props.accountId,
-        contacts: contacts,
-        setContacts: setContacts,
         open: addStateOpen[0],
         setOpen: addStateOpen[1],
+        ...props,
       }} />
       <div className="px-4 sm:px-6 lg:px-8">
         <div className="sm:flex sm:items-end">
@@ -63,7 +53,7 @@ export default function Contacts(props: Props) {
               type="button"
               className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
               onClick={() => {
-                if (props.contacts.length >= MAX_CONTACTS_ON_FREE) {
+                if (props.state.contacts.length >= MAX_CONTACTS_ON_FREE) {
                   alert(`無料版の経由地点の追加は${MAX_CONTACTS_ON_FREE}件までです`)
                   return
                 }
@@ -114,18 +104,17 @@ export default function Contacts(props: Props) {
                       </tr>
                     </thead>
                     <tbody className="bg-white">
-                      {contacts.filter(
+                      {props.state.contacts.filter(
                         (person) => (person.name.includes(searchText))
                       ).map((person, personIdx) => (
                         <ContactRow
                           accountId={props.accountId}
-                          contacts={contacts}
-                          setContacts={setContacts}
                           key={personIdx}
                           person={person}
                           personIdx={personIdx}
                           state={props.state}
                           dispatch={props.dispatch}
+                          {...props}
                         />
                       ))}
                     </tbody>

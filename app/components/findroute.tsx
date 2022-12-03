@@ -10,7 +10,6 @@ import { State, Action } from '../lib/select-contact-context'
 
 // (2) Types Layer
 export type ContainerProps = {
-    contacts?: Contact[]
     state: State
     dispatch: React.Dispatch<Action>
 }
@@ -22,13 +21,13 @@ type Props = {
 } & ContainerProps
 
 function disableCondition(props: Props) {
-    if (props.state.startId === undefined || props.state.wayPointIds === undefined || props.contacts === undefined) {
+    if (props.state.startId === '') {
         return true
     }
     if (props.state.wayPointIds.size === 0) {
         return true
     }
-    if (props.contacts.length === 0) {
+    if (props.state.contacts.length === 0) {
         return true
     }
     if (props.state.wayPointIds.size === 1 && props.state.wayPointIds.has(props.state.startId)) {
@@ -74,15 +73,15 @@ const Component: React.FC<Props> = props => (
                     },
                     body: JSON.stringify({
                         "start_time": props.startTime,
-                        "start": contact2waypoint(props.contacts.find((person) => person.id === props.state.startId)),
-                        "goal": contact2waypoint(props.contacts.find((person) => person.id === props.state.startId)),
-                        "waypoints": props.contacts.filter((contact) => (contact.id !== props.state.startId && props.state.wayPointIds.has(contact.id))).map((contact) => contact2waypoint(contact))
+                        "start": contact2waypoint(props.state.contacts.find((person) => person.id === props.state.startId)),
+                        "goal": contact2waypoint(props.state.contacts.find((person) => person.id === props.state.startId)),
+                        "waypoints": props.state.contacts.filter((contact) => (contact.id !== props.state.startId && props.state.wayPointIds.has(contact.id))).map((contact) => contact2waypoint(contact))
                     }),
                 }).then(async (res) => {
                     const json = await res.json()
                     if (json.status === "error") {
                         alert("解が見つかりませんでした")
-                        console.warn("error", json.error)
+                        console.error(json.error)
                         return
                     }
                     // console.log("result.json:", json)

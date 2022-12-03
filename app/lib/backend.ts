@@ -11,8 +11,10 @@ export async function fetchBackendAPI(req: CalcRequest) {
     })
 
     if (!res.ok) {
-        console.error(res.status)
-        throw new Error('Failed to fetch API')
+        return {
+            "status": "error",
+            "error": `${res.status} ${res.statusText}`
+        }
     }
 
     return await res.json()

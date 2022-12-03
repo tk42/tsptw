@@ -9,8 +9,6 @@ import { Action, State } from '../lib/select-contact-context';
 // (2) Types Layer
 export type ContainerProps = {
     accountId: string
-    contacts: Contact[]
-    setContacts: React.Dispatch<React.SetStateAction<Contact[]>>
     person: Contact
     personIdx: number
     state: State
@@ -24,14 +22,7 @@ type Props = {
 // (4) DOM Layer
 const Component: React.FC<Props> = props => (
     <>
-        <EditContact {...{
-            accountId: props.accountId,
-            person: props.person,
-            contacts: props.contacts,
-            setContacts: props.setContacts,
-            open: props.open,
-            setOpen: props.setOpen,
-        }} />
+        <EditContact {...props} />
         <tr key={props.person.id} className={props.personIdx % 2 === 0 ? undefined : 'bg-gray-50'}>
             <td className="relative whitespace-nowrap py-1 pl-1 text-right text-md font-medium">
                 <input
@@ -98,7 +89,7 @@ const Component: React.FC<Props> = props => (
                                 "contactId": props.person.id
                             })
                         }).then(async () => {
-                            props.setContacts(props.contacts.filter((p) => p.id !== props.person.id))
+                            props.dispatch({ type: 'REMOVE_CONTACT', contactId: `${props.person.id}` })
                             alert(`削除しました`)
                         })
                     }}

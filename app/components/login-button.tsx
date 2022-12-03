@@ -15,8 +15,8 @@ const classname = "font-medium text-indigo-600 hover:text-indigo-500"
 // (4) DOM Layer
 const Component: React.FC<Props> = props => (
     <>
-        <a href={props.user === undefined ? "/api/auth/logout" : "/api/auth/login"} className={classname}>
-            Log {props.user === undefined ? "out" : "in"}
+        <a href={props.user === undefined ? "/api/auth/login" : "/api/auth/logout"} className={classname}>
+            Log {props.user === undefined ? "in" : "out"}
         </a>
     </>
 )

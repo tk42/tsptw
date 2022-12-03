@@ -2,11 +2,12 @@ import { Fragment, useState } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import DatetimeForm from './datetime-form'
 import Contact from '../interfaces/contact'
+import { Action, State } from '../lib/select-contact-context';
 
 type Props = {
     accountId: string,
-    contacts: Contact[],
-    setContacts: React.Dispatch<React.SetStateAction<Contact[]>>
+    state: State
+    dispatch: React.Dispatch<Action>
     open: boolean,
     setOpen: React.Dispatch<React.SetStateAction<boolean>>
 }
@@ -124,7 +125,7 @@ export default function AddContact(props: Props) {
                                             })
                                         }).then(async (res) => {
                                             const contact = await res.json()
-                                            props.setContacts(props.contacts.concat(contact))
+                                            props.dispatch({ type: 'ADD_CONTACT', contact: contact })
                                             alert(`登録しました`)
                                             props.setOpen(false)
                                             setName('')

@@ -107,6 +107,7 @@ export async function addContact(accountId: string, name: string, address: strin
       stayingMin
       startTime
       endTime
+      createdAt
     }
   }`)
   const contactId = res.createContact.id
@@ -145,7 +146,8 @@ export async function addContact(accountId: string, name: string, address: strin
     'address': res.createContact.address,
     'stayingMin': res.createContact.stayingMin,
     'startTime': res.createContact.startTime,
-    'endTime': res.createContact.endTime
+    'endTime': res.createContact.endTime,
+    'createdAt': res.createContact.createdAt
   } as Contact
 }
 
@@ -183,7 +185,8 @@ export async function editContact(contactId: string, name: string, address: stri
     'address': res.updateContact.address,
     'stayingMin': res.updateContact.stayingMin,
     'startTime': res.updateContact.startTime,
-    'endTime': res.updateContact.endTime
+    'endTime': res.updateContact.endTime,
+    'createdAt': res.updateContact.createdAt
   } as Contact
 }
 

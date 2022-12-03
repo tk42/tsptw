@@ -18,7 +18,12 @@ type Props = {
 };
 
 function Index(props: Props) {
-    const [state, dispatch] = useReducer(reducer, { startId: '', wayPointIds: new Set('') })
+    const [state, dispatch] = useReducer(reducer,
+        {
+            startId: '',
+            wayPointIds: new Set(''),
+            contacts: props.contacts,
+        })
 
     return (
         <>
@@ -31,17 +36,16 @@ function Index(props: Props) {
                     <ctx.Provider value={{
                         startId: state.startId,
                         wayPointIds: state.wayPointIds,
+                        contacts: state.contacts,
                         dispatch: dispatch
                     }}>
                         <Contacts {...{
                             accountId: props.accountId,
-                            contacts: props.contacts,
                             email: props.user.email!,
                             state: state,
                             dispatch: dispatch
                         }} />
                         <FindRoute {...{
-                            contacts: props.contacts,
                             state: state,
                             dispatch: dispatch
                         }} />
