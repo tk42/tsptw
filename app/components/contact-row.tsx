@@ -54,7 +54,7 @@ const Component: React.FC<Props> = props => (
                     type={"checkbox"}
                     id={`w-${props.person.id}`}
                     name={"wayPoint"}
-                    className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                    className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 disabled:opacity-50"
                     disabled={props.state.startId === `${props.person.id}`}
                     checked={props.state.wayPointIds.has(`${props.person.id}`)}
                     onChange={() => {
