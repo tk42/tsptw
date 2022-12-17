@@ -1,5 +1,12 @@
 // If you want to use other PostCSS plugins, see the following:
 // https://tailwindcss.com/docs/using-with-preprocessors
 module.exports = {
-  plugins: ['tailwindcss', 'postcss-preset-env', '@tailwindcss/typography', '@tailwindcss/forms'],
+  plugins: [
+    'tailwindcss', 
+    'postcss-preset-env', 
+    '@tailwindcss/typography', 
+    '@tailwindcss/forms',
+    'autoprefixer',
+    'cssnano'
+  ],
 }

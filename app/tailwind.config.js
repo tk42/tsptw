@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
+  mode: "jit",
   purge: ['./components/**/*.tsx', './pages/**/*.tsx'],
   theme: {
     extend: {
