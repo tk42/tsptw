@@ -31,4 +31,5 @@ async def solve(request: RequestBody):
         return solver.asdict()
     except Exception:
         t, v, tb = sys.exc_info()
+        logging.error(traceback.format_exception(t, v, tb))
         return {"status": "error", "error": traceback.format_exception(t, v, tb)}
