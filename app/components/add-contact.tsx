@@ -1,11 +1,10 @@
 import { Fragment, useState } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import DatetimeForm from './datetime-form'
-import Contact from '../interfaces/contact'
 import { Action, State } from '../lib/select-contact-context';
 
 type Props = {
-    accountId: string,
+    accountId: number,
     state: State
     dispatch: React.Dispatch<Action>
     open: boolean,
@@ -109,7 +108,7 @@ export default function AddContact(props: Props) {
                                 <div className="mt-5 sm:mt-6">
                                     <button
                                         type="button"
-                                        className="inline-flex w-full rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:text-sm"
+                                        className="inline-flex justify-center w-full rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:text-sm"
                                         onClick={() => fetch('/api/contact/add', {
                                             method: "POST",
                                             headers: {

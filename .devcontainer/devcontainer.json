@@ -14,7 +14,10 @@
 	// "forwardPorts": [],
 
 	// Use 'postCreateCommand' to run commands after the container is created.
-	"postCreateCommand": "pip3 install --user -r ./solver/requirements.txt",
+	"postCreateCommand": [
+		"pip3 install --user -r ./solver/requirements.txt",
+		"go install github.com/pressly/goose/v3/cmd/goose@latest"
+	],
 
 	// Configure tool-specific properties.
 	"customizations": {
@@ -25,8 +28,10 @@
 				"shd101wyy.markdown-preview-enhanced"
 			]
 		}
-	}
+	},
 
 	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
 	// "remoteUser": "root"
+	
+	"runArgs": ["--network=backend_default"]
 }

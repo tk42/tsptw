@@ -1,6 +1,6 @@
 
 type Contact = {
-    id: string
+    id: number
     name: string
     address: string
     stayingMin: number

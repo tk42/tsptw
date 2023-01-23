@@ -1,211 +1,164 @@
-import { fetchAPI } from './hygraph'
+import { fetchAPI } from './hasura'
 import { fetchBackendAPI } from './backend'
+import Account, { AccountStatus, AccountStatusLimit } from '../interfaces/account'
 import Contact from '../interfaces/contact'
 
 
-export const MAX_CONTACTS_ON_FREE = 50
-
-type Items = {
-  [key: string]: string
-}
-
-async function createAccount(name: string, email: string) {
+async function createAccount(name: string, email: string, picture: string) {
   const res = await fetchAPI(`
   mutation {
-    createAccount(data: {
-      name: "${name}"
-      email: "${email}"
+    insert_accounts_one(object: {
+      name: "${name}", 
+      email: "${email}", 
+      picture: "${picture}"
     }) {
       id
+      name
+      email
+      organization
+      picture
+      created_at
     }
   }`)
 
-  const res2 = await fetchAPI(`
-  mutation {
-    publishAccount(where: {
-      id: "${res.createAccount.id}"
-    }) {
-      id
-    }
-  }`)
-
-  return res2.publishAccount.id
+  return res.insert_accounts_one.id
 }
 
-export async function getAccountIdByEmail(name: string, email: string) {
+export async function getAccountIdByEmail(name: string, email: string, picture: string): Promise<Account> {
   const res = await fetchAPI(`
   query {
-    accounts(
-      where: {
-        email: "${email}"
-      }
-    ) {
+    accounts(where: {email: {_eq: "${email}"}}) {
       id
+      name
+      email
+      organization
+      picture
+      status
+      created_at
     }
   }`)
 
   if (res.accounts.length === 0) {
-    return createAccount(name, email)
+    return createAccount(name, email, picture)
   }
-  return res.accounts[0].id
+  return res.accounts[0] as Account
 }
 
-export async function getContactByAccountEmail(accountId: string) {
+export async function getContactByAccountEmail(accountId: number, status: AccountStatus) {
+  const limit: number = AccountStatusLimit[status]
   const res = await fetchAPI(`
   query {
-    account(
-      where: {
-        id: "${accountId}"
-      }
-    ) {
-      contacts(
-        first: ${MAX_CONTACTS_ON_FREE}
-      ) {
-        id
-        name
-        address
-        stayingMin
-        startTime
-        endTime
-        createdAt
+    accounts_by_pk(id: "${accountId}") {
+      account_contacts(limit: ${limit}) {
+        contact {
+          id
+          name
+          address
+          start_time
+          staying_min
+          end_time
+          created_at
+          updated_at
+        }
       }
     }
   }`)
 
-  const items: Contact[] = []
-  res.account.contacts.forEach(element => {
-    items.push({
-      'id': element.id,
-      'name': element.name,
-      'address': element.address,
-      'stayingMin': element.stayingMin,
-      'startTime': element.startTime,
-      'endTime': element.endTime,
-      'createdAt': element.createdAt
-    } as Contact)
-  });
-
-  return items
+  return res.accounts_by_pk.account_contacts.map(element => {
+    return {
+      'id': element.contact.id,
+      'name': element.contact.name,
+      'address': element.contact.address,
+      'stayingMin': element.contact.staying_min,
+      'startTime': element.contact.start_time,
+      'endTime': element.contact.end_time,
+      'createdAt': element.contact.created_at
+    } as Contact
+  })
 }
 
 
 export async function addContact(accountId: string, name: string, address: string, stayingMin: number, startTime: string, endTime: string) {
   const res = await fetchAPI(`
   mutation {
-    createContact(
-      data: {
-        name: "${name}"
-        address: "${address}"
-        stayingMin: ${stayingMin}
-        startTime: "${startTime}"
-        endTime: "${endTime}"
-      }
-    ) {
+    insert_contacts_one(object: {
+      name: "${name}",
+      address: "${address}",
+      staying_min: ${stayingMin},
+      start_time: "${startTime}",
+      end_time: "${endTime}"
+    }
+  ) {
       id
       name
       address
-      stayingMin
-      startTime
-      endTime
-      createdAt
+      staying_min
+      start_time
+      end_time
+      created_at
     }
   }`)
-  const contactId = res.createContact.id
 
   await fetchAPI(`
-    mutation {
-    updateAccount(where: {
-      id: "${accountId}"
+  mutation {
+    insert_account_contact_one(object: {
+      account_id: "${accountId}", 
+      contact_id: "${res.insert_contacts_one.id}"
+    }) {
+      created_at
     }
-      data: {
-      contacts: {
-        connect: {
-          where: {
-            id: "${contactId}"
-          }
-        }
-      }
-    }) {
-      id
-    },
-    publishContact(where: {
-      id: "${contactId}"
-    }) {
-      id
-    },
-    publishAccount(where: {
-      id: "${accountId}"
-    }) {
-      id
-    }
-  } `)
+  }`)
 
   return {
-    'id': res.createContact.id,
-    'name': res.createContact.name,
-    'address': res.createContact.address,
-    'stayingMin': res.createContact.stayingMin,
-    'startTime': res.createContact.startTime,
-    'endTime': res.createContact.endTime,
-    'createdAt': res.createContact.createdAt
+    'id': res.insert_contacts_one.id,
+    'name': res.insert_contacts_one.name,
+    'address': res.insert_contacts_one.address,
+    'stayingMin': res.insert_contacts_one.staying_min,
+    'startTime': res.insert_contacts_one.start_time,
+    'endTime': res.insert_contacts_one.end_time,
+    'createdAt': res.insert_contacts_one.created_at
   } as Contact
 }
 
 export async function editContact(contactId: string, name: string, address: string, stayingMin: number, startTime: string, endTime: string) {
   const res = await fetchAPI(`
   mutation {
-    updateContact(
-      where: {
+    update_contacts_by_pk(
+      pk_columns: {
         id: "${contactId}"
+      }, 
+      _set: {
+        name: "${name}", 
+        address: "${address}", 
+        staying_min: ${stayingMin},
+        start_time: "${startTime}", 
+        end_time: "${endTime}"
+      }) {
+        id
+        name
+        address
+        start_time
+        end_time
+        staying_min
+        created_at
       }
-      data: {
-        name: "${name}"
-        address: "${address}"
-        stayingMin: ${stayingMin}
-        startTime: "${startTime}"
-        endTime: "${endTime}"
-    }) {
-      id
-      name
-      address
-      stayingMin
-      startTime
-      endTime
-    },
-    publishContact(where: {
-      id: "${contactId}"
-    }) {
-      id
-    }
   }`)
 
   return {
-    'id': res.updateContact.id,
-    'name': res.updateContact.name,
-    'address': res.updateContact.address,
-    'stayingMin': res.updateContact.stayingMin,
-    'startTime': res.updateContact.startTime,
-    'endTime': res.updateContact.endTime,
-    'createdAt': res.updateContact.createdAt
+    'id': res.update_contacts_by_pk.id,
+    'name': res.update_contacts_by_pk.name,
+    'address': res.update_contacts_by_pk.address,
+    'stayingMin': res.update_contacts_by_pk.staying_min,
+    'startTime': res.update_contacts_by_pk.start_time,
+    'endTime': res.update_contacts_by_pk.end_time,
+    'createdAt': res.update_contacts_by_pk.created_at
   } as Contact
 }
 
-export async function deleteContact(accountId: string, contactId: string) {
-  // delete before unpublish!
+export async function deleteContact(contactId: string) {
   const res = await fetchAPI(`
   mutation {
-    unpublishContact(
-      where: {
-        id: "${contactId}"
-      }
-    ) {
-      id
-    },
-    deleteContact(
-      where: {
-        id: "${contactId}"
-      }
-    ) {
+    delete_contacts_by_pk(id: "${contactId}") {
       id
     }
   }`)
