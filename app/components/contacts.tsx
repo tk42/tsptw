@@ -3,11 +3,11 @@ import AddContact from './add-contact'
 import { Container as ContactRow } from './contact-row'
 import SearchBox from './search-box'
 import { Action, State } from '../lib/select-contact-context';
-import { MAX_CONTACTS_ON_FREE } from '../lib/api'
+import Account, { AccountStatusLimit } from '../interfaces/account'
 
 
 type Props = {
-  accountId: string
+  account: Account
   email: string
   state: State
   dispatch: React.Dispatch<Action>
@@ -20,7 +20,7 @@ export default function Contacts(props: Props) {
   return (
     <>
       <AddContact {...{
-        accountId: props.accountId,
+        accountId: props.account.id,
         open: addStateOpen[0],
         setOpen: addStateOpen[1],
         ...props,
@@ -29,6 +29,9 @@ export default function Contacts(props: Props) {
         <div className="sm:flex sm:items-end">
           <div className="sm:flex-auto">
             <h1 className="text-2xl font-bold text-gray-900">経由地点登録</h1>
+            <p className="mt-2 text-sm text-gray-700">
+              経由地点の追加は{AccountStatusLimit[props.account.status]}件までです.
+            </p>
             <p className="mt-2 text-sm text-gray-700">
               「名称」：経由地点の名称．訪問場所の覚えやすい名称を付けることが可能です．
             </p>
@@ -45,7 +48,7 @@ export default function Contacts(props: Props) {
               「訪問可能時間帯(終)」：経由地点に滞在してもよい最も遅い時刻を入力してください
             </p>
             <p className="mt-2 text-sm text-gray-700">
-              検索窓で名称のフィルタリングができます
+              検索窓で名称のフィルタリングができます.
             </p>
           </div>
           <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
@@ -53,8 +56,8 @@ export default function Contacts(props: Props) {
               type="button"
               className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
               onClick={() => {
-                if (props.state.contacts.length >= MAX_CONTACTS_ON_FREE) {
-                  alert(`無料版の経由地点の追加は${MAX_CONTACTS_ON_FREE}件までです`)
+                if (props.state.contacts.length >= AccountStatusLimit[props.account.status]) {
+                  alert(`経由地点の追加は${AccountStatusLimit[props.account.status]}件までです`)
                   return
                 }
                 addStateOpen[1](true)
@@ -108,7 +111,7 @@ export default function Contacts(props: Props) {
                         (person) => (person.name.includes(searchText))
                       ).map((person, personIdx) => (
                         <ContactRow
-                          accountId={props.accountId}
+                          accountId={props.account.id}
                           key={personIdx}
                           person={person}
                           personIdx={personIdx}

@@ -9,10 +9,11 @@ import { Container as FindRoute } from '../../components/findroute'
 import Contacts from '../../components/contacts';
 import { getAccountIdByEmail, getContactByAccountEmail } from '../../lib/api'
 import Contact from '../../interfaces/contact'
+import Account from '../../interfaces/account'
 import { ctx, reducer } from '../../lib/select-contact-context';
 
 type Props = {
-    accountId: string
+    account: Account
     user: UserProfile
     contacts: Contact[]
 };
@@ -20,8 +21,8 @@ type Props = {
 function Index(props: Props) {
     const [state, dispatch] = useReducer(reducer,
         {
-            startId: '',
-            wayPointIds: new Set(''),
+            startId: 0,
+            wayPointIds: new Set([]),
             contacts: props.contacts,
         })
 
@@ -40,7 +41,7 @@ function Index(props: Props) {
                         dispatch: dispatch
                     }}>
                         <Contacts {...{
-                            accountId: props.accountId,
+                            account: props.account!,
                             email: props.user.email!,
                             state: state,
                             dispatch: dispatch
@@ -61,11 +62,11 @@ export const getServerSideProps: GetServerSideProps = withPageAuthRequired({
     getServerSideProps: async (ctx) => {
         const session = await getSession(ctx.req, ctx.res)
         const { user } = session
-        const accountId = await getAccountIdByEmail(user.name!, user.email!)
-        const contacts = await getContactByAccountEmail(accountId)
+        const account = await getAccountIdByEmail(user.name!, user.email!, user.picture!)
+        const contacts = await getContactByAccountEmail(account.id, account.status)
         return {
             props: {
-                accountId,
+                account,
                 user,
                 contacts
             }

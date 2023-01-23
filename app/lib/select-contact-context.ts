@@ -2,17 +2,17 @@ import { createContext } from 'react';
 import Contact from '../interfaces/contact';
 
 export type State = {
-    startId: string
-    wayPointIds: Set<string>
+    startId: number
+    wayPointIds: Set<number>
     contacts: Contact[]
 }
 
 export type Action = {
     type: 'SET_START'
-    startId: string
+    startId: number
 } | {
     type: 'SET_WAYPOINT'
-    wayPointId: string
+    wayPointId: number
 } | {
     type: 'ADD_CONTACT'
     contact: Contact
@@ -21,7 +21,7 @@ export type Action = {
     contact: Contact
 } | {
     type: 'REMOVE_CONTACT'
-    contactId: string
+    contactId: number
 }
 
 export const reducer = (state: State, action: Action) => {
@@ -57,8 +57,8 @@ export const reducer = (state: State, action: Action) => {
 }
 
 export const ctx = createContext<{
-    startId: string
-    wayPointIds: Set<string>
+    startId: number
+    wayPointIds: Set<number>
     contacts: Contact[]
     dispatch: React.Dispatch<Action>
 }>(null)

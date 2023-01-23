@@ -21,7 +21,7 @@ type Props = {
 } & ContainerProps
 
 function disableCondition(props: Props) {
-    if (props.state.startId === '') {
+    if (props.state.startId === 0) {
         return true
     }
     if (props.state.wayPointIds.size === 0) {
@@ -66,32 +66,34 @@ const Component: React.FC<Props> = props => (
                 type="button"
                 className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto disabled:bg-gray-300"
                 disabled={disableCondition({ ...props })}
-                onClick={() => fetch('/api/find', {
-                    method: "POST",
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        "start_time": props.startTime,
-                        "start": contact2waypoint(props.state.contacts.find((person) => person.id === props.state.startId)),
-                        "goal": contact2waypoint(props.state.contacts.find((person) => person.id === props.state.startId)),
-                        "waypoints": props.state.contacts.filter((contact) => (contact.id !== props.state.startId && props.state.wayPointIds.has(contact.id))).map((contact) => contact2waypoint(contact))
-                    }),
-                }).then(async (res) => {
-                    const json = await res.json()
-                    if (json.status === "error") {
-                        alert("解が見つかりませんでした")
-                        console.error(json.error)
-                        return
-                    }
-                    // console.log("result.json:", json)
-                    const result = {
-                        "status": json.status,
-                        "total_time": json.total_time,
-                        "routes": json.routes,
-                    }
-                    props.setRoute(result.routes)
-                })}
+                onClick={() => {
+                    fetch('/api/find', {
+                        method: "POST",
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            "start_time": props.startTime,
+                            "start": contact2waypoint(props.state.contacts.find((person) => person.id === props.state.startId)!),
+                            "goal": contact2waypoint(props.state.contacts.find((person) => person.id === props.state.startId)!),
+                            "waypoints": props.state.contacts.filter((contact) => (contact.id !== props.state.startId && props.state.wayPointIds.has(contact.id))).map((contact) => contact2waypoint(contact))
+                        }),
+                    }).then(async (res) => {
+                        const json = await res.json()
+                        if (json.status === "error") {
+                            alert("解が見つかりませんでした")
+                            console.error(json.error)
+                            return
+                        }
+                        // console.log("result.json:", json)
+                        const result = {
+                            "status": json.status,
+                            "total_time": json.total_time,
+                            "routes": json.routes,
+                        }
+                        props.setRoute(result.routes)
+                    })
+                }}
             >
                 探索！
             </button>

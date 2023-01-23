@@ -11,7 +11,7 @@ export default function Timeline(props: Props) {
         <div className="flow-root mt-6">
             <ul role="list" className="-mb-8">
                 {props.timeline.map((event, eventIdx) => (
-                    <li key={event.id}>
+                    <li key={`timeline-${eventIdx}`}>
                         <div className="relative pb-8">
                             {eventIdx !== props.timeline.length - 1 ? (
                                 <span className="absolute top-4 left-4 -ml-px h-full w-0.5 bg-gray-200" aria-hidden="true" />

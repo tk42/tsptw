@@ -1,0 +1,9 @@
+version: 2
+sql:
+  - engine: "postgresql"
+    schema: ["sqlc/schema/001_contact.sql", "sqlc/schema/002_account.sql"]
+    queries: ["sqlc/queries/contact.sql", "sqlc/queries/account.sql"]
+    gen:
+      go:
+        package: "sqlc"
+        out: "gen/sqlc"

@@ -8,7 +8,7 @@ import { Action, State } from '../lib/select-contact-context';
 
 // (2) Types Layer
 export type ContainerProps = {
-    accountId: string
+    accountId: number
     person: Contact
     personIdx: number
     state: State
@@ -29,10 +29,10 @@ const Component: React.FC<Props> = props => (
                     type={"radio"}
                     id={`s-${props.person.id}`}
                     name={"startPoint"}
-                    defaultChecked={props.state.startId === `${props.person.id}`}
+                    defaultChecked={props.state.startId === props.person.id}
                     className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500"
                     onChange={() => {
-                        props.dispatch({ type: 'SET_START', startId: `${props.person.id}` })
+                        props.dispatch({ type: 'SET_START', startId: props.person.id })
                         // NOTE: Not support because the appearance is not matched to the internal state.
                         // if (props.wayPointIdxs.includes(props.startPointIdx)) {
                         //     props.setWayPointIdxs(props.wayPointIdxs.filter((idx) => idx !== props.startPointIdx))
@@ -46,10 +46,10 @@ const Component: React.FC<Props> = props => (
                     id={`w-${props.person.id}`}
                     name={"wayPoint"}
                     className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 disabled:opacity-50"
-                    disabled={props.state.startId === `${props.person.id}`}
-                    checked={props.state.wayPointIds.has(`${props.person.id}`)}
+                    disabled={props.state.startId === props.person.id}
+                    checked={props.state.wayPointIds.has(props.person.id)}
                     onChange={() => {
-                        props.dispatch({ type: 'SET_WAYPOINT', wayPointId: `${props.person.id}` })
+                        props.dispatch({ type: 'SET_WAYPOINT', wayPointId: props.person.id })
 
                         // NOTE: Not support because the appearance is not matched to the internal state.
                         // if (props.wayPointIdxs.includes(props.startPointIdx)) {
@@ -85,11 +85,10 @@ const Component: React.FC<Props> = props => (
                                 'Content-Type': 'application/json'
                             },
                             body: JSON.stringify({
-                                "accountId": props.accountId,
                                 "contactId": props.person.id
                             })
                         }).then(async () => {
-                            props.dispatch({ type: 'REMOVE_CONTACT', contactId: `${props.person.id}` })
+                            props.dispatch({ type: 'REMOVE_CONTACT', contactId: props.person.id })
                             alert(`削除しました`)
                         })
                     }}

@@ -5,7 +5,7 @@ import Contact from '../interfaces/contact'
 import { Action, State } from '../lib/select-contact-context';
 
 type Props = {
-    accountId: string,
+    accountId: number,
     person: Contact,
     state: State
     dispatch: React.Dispatch<Action>
