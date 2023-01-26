@@ -13,7 +13,7 @@ import (
 const createAccount = `-- name: CreateAccount :one
 INSERT INTO accounts (name, email, picture, organization)
 VALUES ($1, $2, $3, $4)
-RETURNING id, created_at, updated_at, name, email, picture, organization, status, user_timezone, expired_at
+RETURNING id, created_at, updated_at, name, email, picture, organization, status, expired_at
 `
 
 type CreateAccountParams struct {
@@ -40,7 +40,6 @@ func (q *Queries) CreateAccount(ctx context.Context, arg CreateAccountParams) (A
 		&i.Picture,
 		&i.Organization,
 		&i.Status,
-		&i.UserTimezone,
 		&i.ExpiredAt,
 	)
 	return i, err
@@ -49,7 +48,7 @@ func (q *Queries) CreateAccount(ctx context.Context, arg CreateAccountParams) (A
 const deleteAccount = `-- name: DeleteAccount :one
 DELETE FROM accounts
 WHERE id = $1
-RETURNING id, created_at, updated_at, name, email, picture, organization, status, user_timezone, expired_at
+RETURNING id, created_at, updated_at, name, email, picture, organization, status, expired_at
 `
 
 func (q *Queries) DeleteAccount(ctx context.Context, id int64) (Account, error) {
@@ -64,14 +63,13 @@ func (q *Queries) DeleteAccount(ctx context.Context, id int64) (Account, error) 
 		&i.Picture,
 		&i.Organization,
 		&i.Status,
-		&i.UserTimezone,
 		&i.ExpiredAt,
 	)
 	return i, err
 }
 
 const getAccount = `-- name: GetAccount :one
-SELECT id, created_at, updated_at, name, email, picture, organization, status, user_timezone, expired_at FROM accounts
+SELECT id, created_at, updated_at, name, email, picture, organization, status, expired_at FROM accounts
 WHERE id = $1
 `
 
@@ -87,14 +85,13 @@ func (q *Queries) GetAccount(ctx context.Context, id int64) (Account, error) {
 		&i.Picture,
 		&i.Organization,
 		&i.Status,
-		&i.UserTimezone,
 		&i.ExpiredAt,
 	)
 	return i, err
 }
 
 const getAccountByEmail = `-- name: GetAccountByEmail :one
-SELECT id, created_at, updated_at, name, email, picture, organization, status, user_timezone, expired_at FROM accounts
+SELECT id, created_at, updated_at, name, email, picture, organization, status, expired_at FROM accounts
 WHERE email = $1
 `
 
@@ -110,14 +107,13 @@ func (q *Queries) GetAccountByEmail(ctx context.Context, email string) (Account,
 		&i.Picture,
 		&i.Organization,
 		&i.Status,
-		&i.UserTimezone,
 		&i.ExpiredAt,
 	)
 	return i, err
 }
 
 const listAccounts = `-- name: ListAccounts :many
-SELECT id, created_at, updated_at, name, email, picture, organization, status, user_timezone, expired_at FROM accounts
+SELECT id, created_at, updated_at, name, email, picture, organization, status, expired_at FROM accounts
 ORDER BY name
 `
 
@@ -139,7 +135,6 @@ func (q *Queries) ListAccounts(ctx context.Context) ([]Account, error) {
 			&i.Picture,
 			&i.Organization,
 			&i.Status,
-			&i.UserTimezone,
 			&i.ExpiredAt,
 		); err != nil {
 			return nil, err
@@ -191,9 +186,9 @@ func (q *Queries) ListContactsByAccountID(ctx context.Context, accountID int64) 
 
 const updateAccount = `-- name: UpdateAccount :one
 UPDATE accounts
-SET name = $2, email = $3, picture = $4, organization = $5, updated_at = NOW()
+SET name = $2, email = $3, picture = $4, organization = $5, status = $6, updated_at = NOW()
 WHERE id = $1
-RETURNING id, created_at, updated_at, name, email, picture, organization, status, user_timezone, expired_at
+RETURNING id, created_at, updated_at, name, email, picture, organization, status, expired_at
 `
 
 type UpdateAccountParams struct {
@@ -202,6 +197,7 @@ type UpdateAccountParams struct {
 	Email        string
 	Picture      string
 	Organization sql.NullString
+	Status       int32
 }
 
 func (q *Queries) UpdateAccount(ctx context.Context, arg UpdateAccountParams) (Account, error) {
@@ -211,6 +207,7 @@ func (q *Queries) UpdateAccount(ctx context.Context, arg UpdateAccountParams) (A
 		arg.Email,
 		arg.Picture,
 		arg.Organization,
+		arg.Status,
 	)
 	var i Account
 	err := row.Scan(
@@ -222,7 +219,6 @@ func (q *Queries) UpdateAccount(ctx context.Context, arg UpdateAccountParams) (A
 		&i.Picture,
 		&i.Organization,
 		&i.Status,
-		&i.UserTimezone,
 		&i.ExpiredAt,
 	)
 	return i, err
