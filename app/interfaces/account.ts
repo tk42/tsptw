@@ -9,8 +9,8 @@ export enum AccountStatus {
 export const AccountStatusName = {
     [AccountStatus.Expired]: 'Expired',
     [AccountStatus.Bronze]: 'Bronze',
-    [AccountStatus.Silver]: 'Bronze',
-    [AccountStatus.Gold]: 'Bronze',
+    [AccountStatus.Silver]: 'Silver',
+    [AccountStatus.Gold]: 'Gold',
 }
 
 export const AccountStatusLimit = {

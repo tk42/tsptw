@@ -18,7 +18,6 @@ type Account struct {
 	Picture      string
 	Organization sql.NullString
 	Status       int32
-	UserTimezone sql.NullString
 	ExpiredAt    sql.NullTime
 }
 
